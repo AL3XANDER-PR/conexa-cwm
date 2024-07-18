@@ -25,7 +25,7 @@ export const fetchData = async <T>(
 };
 
 export const fetchDataP = async (endpoint: string,data: any): Promise<CatalogItem[]> => {
-  const response: AxiosResponse<{ data: CatalogItem[] }> = await api.post(endpoint,data);
+  const response: AxiosResponse<{ data: CatalogItem[] }> = await api.options(endpoint,data);
   return response.data.data;
 };
 
