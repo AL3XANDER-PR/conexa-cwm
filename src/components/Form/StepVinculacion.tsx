@@ -2,7 +2,6 @@ import { useFormikContext } from "formik";
 import { FormDataValues } from "../../interfaces/FormInterface";
 import SelectInput from "../../shared/FormInputs/SelectInput";
 import InputSearchVinculacion from "../../shared/FormInputs/InputSearchVinculacion";
-import axios from "axios";
 import { TIPO_DOCUMENTO } from "../../constants/constants";
 import TextInput from "../../shared/FormInputs/TextInput";
 import { getInfoByDocument } from "../../services/getDocumentService";
