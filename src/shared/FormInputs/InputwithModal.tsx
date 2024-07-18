@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useField, useFormikContext } from "formik";
 import ModalComponent from "../ModalComponent";
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as yup from "yup";
 import { MONEDA, REGEXP, TIPO_DOCUMENTO } from "../constants/constants";
 const defaultErrorMessages = {

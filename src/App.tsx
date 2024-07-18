@@ -6,7 +6,7 @@ import Hero from "./shared/Hero";
 function App() {
   return (
     <div className="flex flex-col">
-      <Header />
+      {/* <Header /> */}
       <Hero />
       <Form />
       <Footer />

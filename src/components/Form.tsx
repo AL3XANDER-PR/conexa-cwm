@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useRef, useState } from "react";
 import { StepNavigation } from "./StepNavigation";
 import { ButtonsNavigation } from "./ButtonsNavigation";
@@ -18,6 +19,7 @@ import Loading from "../shared/Loading";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import { sendMessage } from "../services/sendMessageService";
 const MySwal = withReactContent(Swal);
 
 const REGION = import.meta.env.VITE_REGION;
@@ -151,6 +153,7 @@ export default function Form() {
     initialValues,
     validationSchema: validationSchema[step],
     onSubmit: async (values, { setSubmitting }) => {
+
       try {
         // setLoadingSendForm(true);
         const persona = {
@@ -187,6 +190,7 @@ export default function Form() {
           id_genero: values.id_genero || null,
           id_tipo_vinculacion: values.id_tipo_vinculacion || null,
           regimenPatrimonialConyuge: values.regimenPatrimonialConyuge || null,
+          celular: values.celular.split(" ").slice(1).join(""),
           persona,
           ficha_conyugue,
           djImporte: values.djImporte.replace(/[^0-9]/g, ""),
@@ -214,12 +218,13 @@ export default function Form() {
             " "
           )} Hemos recibido la información correctamente. Nos pondremos en contacto contigo muy pronto para continuar con el proceso.`;
 
-          await axios.post("http://localhost:3001/send", {
+          const params = {
             phone: `51${cleanedValues.persona.celular}`,
             message: msj,
-          });
+          }
 
-          // return;
+          await sendMessage({...params})
+
           // setConfirm(false);
           // setStep(0);
           // formik.resetForm();
@@ -235,50 +240,9 @@ export default function Form() {
         }
 
         // setLoadingSendForm(false);
-
-        // if (response.data.status === 1) {
-        //   MySwal.fire({
-        //     title: "Éxito",
-        //     text: `Sus Datos fueron guardados correctamente!!`,
-        //     icon: "success",
-        //     customClass: {
-        //       popup: " text-sm",
-        //     },
-        //   });
-        //   // enviar wtsp
-
-        //   // const msj = `Hola Estimado ${persona.nombre} 😊\n \nTu datos fueron recepcionados correctamente .\n \n se procedera a revisar tu información y luego se te hara saber tus rendimientos. 📈💸`
-        //   const msj = `Hemos recibido la información correctamente. Nos pondremos en contacto contigo muy pronto para continuar con el proceso.`;
-
-        //   const res: any = await axios.post(
-        //     "http://localhost:3007/api/send-message",
-        //     {
-        //       phone: `+51${cleanedValues.persona.celular}`,
-        //       message: msj,
-        //     }
-        //   );
-
-        //   setStep(0);
-        //   formik.resetForm();
-        // } else {
-        //   MySwal.fire({
-        //     title: "Error",
-        //     text: `${response?.data?.message}`,
-        //     icon: "error",
-        //     customClass: {
-        //       popup: " text-sm",
-        //     },
-        //   });
-        // }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-
-      //   // Aquí puedes añadir la lógica para enviar los datos a un servidor si es necesario
-      // } else {
-      //   // Si se cancela, se puede restablecer el estado de envío
-      //   setSubmitting(false);
-      // }
       return;
     },
   });

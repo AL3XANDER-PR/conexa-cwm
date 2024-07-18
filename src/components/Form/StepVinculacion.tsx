@@ -5,6 +5,7 @@ import InputSearchVinculacion from "../../shared/FormInputs/InputSearchVinculaci
 import axios from "axios";
 import { TIPO_DOCUMENTO } from "../../constants/constants";
 import TextInput from "../../shared/FormInputs/TextInput";
+import { getInfoByDocument } from "../../services/getDocumentService";
 
 export default function StepVinculacion() {
   const {
@@ -24,23 +25,16 @@ export default function StepVinculacion() {
     }
 
     try {
-      const res = await axios.get(
-        "http://localhost:3000/common/proceso/getDocument",
-        {
-          params: {
-            tipo: TIPO_DOCUMENTO.DNI,
-            numero: values.nro_documento_pariente,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const params = {
+        tipo: TIPO_DOCUMENTO.DNI,
+        numero: values.nro_documento_pariente,
+      };
+      const res = await getInfoByDocument({ ...params });
 
       const pariente = [
-        res.data.nombres,
-        res.data.apellidoPaterno,
-        res.data.apellidoMaterno,
+        res.nombres,
+        res.apellidoPaterno,
+        res.apellidoMaterno,
       ].join(" ");
 
       setFieldValue("nombre_pariente", pariente);

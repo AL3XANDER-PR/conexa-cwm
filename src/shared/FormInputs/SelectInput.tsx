@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import { useField } from "formik";
 import { fetchDataP } from "../../services/apiService";

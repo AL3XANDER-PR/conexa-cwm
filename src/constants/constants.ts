@@ -1,4 +1,7 @@
-export const API_BASE_URL = "http://localhost:3000/common/";
+export const API_BASE_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV
+    : import.meta.env.VITE_API_PRO;
 
 export const TIPO_DOCUMENTO = {
   RUC: "8",
@@ -152,7 +155,7 @@ export const DIGTOS_CB = {
 interface BancoType {
   nombre: string;
 }
-export const BANCO : { [key: number]: BancoType } =  {
+export const BANCO: { [key: number]: BancoType } = {
   74: { nombre: "Banco Continental" },
   75: { nombre: "Banco de Crédito del Perú" },
   377: { nombre: "Banco InterBank" },

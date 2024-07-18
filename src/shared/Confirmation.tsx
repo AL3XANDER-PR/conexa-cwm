@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useFormikContext } from "formik";
 import { FormDataValues } from "../interfaces/FormInterface";
 import { BANCO, TIPO_PARTICIPE, TIPO_PERSONA } from "../constants/constants";

@@ -10,11 +10,11 @@ import {
 } from "../../constants/constants";
 import TextInput from "../../shared/FormInputs/TextInput";
 import InputSearch from "../../shared/FormInputs/InputSearch";
-import axios from "axios";
 import { IconCompany, IconPerson } from "../../assets/icons/Icons";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { getInfoByDocument } from "../../services/getDocumentService";
 const MySwal = withReactContent(Swal);
 
 export default function StepDatos() {
@@ -43,21 +43,13 @@ export default function StepDatos() {
     }
 
     try {
-      const res = await axios.get(
-        "http://localhost:3000/common/proceso/getDocument",
-        {
-          params: {
-            tipo: values.tipoDocumento,
-            numero: values.nroDocumento,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(res.data === "");
+      const params = {
+        tipo: values.tipoDocumento,
+        numero: values.nroDocumento,
+      };
+      const res = await getInfoByDocument({ ...params });
 
-      if (res.data === "") {
+      if (res === "") {
         MySwal.fire({
           title: "Error",
           text: `No se encontro a la persona con DNI: ${values.nroDocumento}`,
@@ -70,20 +62,20 @@ export default function StepDatos() {
         if (values.tipoDocumento === TIPO_DOCUMENTO.DNI) {
           setValues({
             ...values,
-            nombres: res.data.nombres,
-            apellidoPaterno: res.data.apellidoPaterno,
-            apellidoMaterno: res.data.apellidoMaterno,
-            nroDocumento: res.data.numeroDocumento,
+            nombres: res.nombres,
+            apellidoPaterno: res.apellidoPaterno,
+            apellidoMaterno: res.apellidoMaterno,
+            nroDocumento: res.numeroDocumento,
           });
         }
 
         if (values.tipoDocumento === TIPO_DOCUMENTO.RUC) {
           setValues({
             ...values,
-            razonSocial: res.data.razonSocial,
-            objetoSocial: res.data.actividadEconomica,
-            estadoContribuyenteSunat: res.data.condicion,
-            lugarRegistro: res.data.direccion,
+            razonSocial: res.razonSocial,
+            objetoSocial: res.actividadEconomica,
+            estadoContribuyenteSunat: res.condicion,
+            lugarRegistro: res.direccion,
           });
         }
       }
@@ -105,26 +97,18 @@ export default function StepDatos() {
     }
 
     try {
-      const res = await axios.get(
-        "http://localhost:3000/common/proceso/getDocument",
-        {
-          params: {
-            tipo: values.tipoDocumentoConyuge,
-            numero: values.nroDocumentoConyuge,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(res.data);
+      const params = {
+        tipo: values.tipoDocumentoConyuge,
+        numero: values.nroDocumentoConyuge,
+      };
+      const res = await getInfoByDocument({ ...params });
       if (values.tipoDocumento === TIPO_DOCUMENTO.DNI) {
         setValues({
           ...values,
-          nombresConyuge: res.data.nombres,
-          apellidoPaternoConyuge: res.data.apellidoPaterno,
-          apellidoMaternoConyuge: res.data.apellidoMaterno,
-          // nroDocumento: res.data.numeroDocumento,
+          nombresConyuge: res.nombres,
+          apellidoPaternoConyuge: res.apellidoPaterno,
+          apellidoMaternoConyuge: res.apellidoMaterno,
+          // nroDocumento: res.numeroDocumento,
         });
       }
 
