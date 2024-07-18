@@ -1,6 +1,6 @@
 import Form from "./components/Form";
 import Footer from "./shared/Footer";
-import Header from "./shared/Header";
+// import Header from "./shared/Header";
 import Hero from "./shared/Hero";
 
 function App() {
