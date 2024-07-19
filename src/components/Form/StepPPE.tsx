@@ -37,7 +37,7 @@ export default function StepPPE() {
             <TextInput
               name="institucion_ppe"
               type="text"
-              label="Institucion"
+              label="Institución"
               className="col-span-12 sm:col-span-6"
             />
             <TextInput

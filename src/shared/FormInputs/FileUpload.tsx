@@ -12,6 +12,7 @@ interface ImageUploadProps {
 const FileUpload: React.FC<ImageUploadProps> = ({ name }) => {
   const { setFieldValue, setFieldTouched, values } = useFormikContext<any>();
   const [field, meta] = useField(name);
+  console.log("💻 - file: FileUpload.tsx:15 - field, meta:", field, meta);
   const [url, setUrl] = useState("");
 
   const onDrop = useCallback(
@@ -172,7 +173,7 @@ const FileUpload: React.FC<ImageUploadProps> = ({ name }) => {
         )}
       </div>
       {meta.touched && meta.error ? (
-        <p className="text-red-500">{meta.error}</p>
+        <p className="text-red-500 col-span-12">{meta.error}</p>
       ) : null}
     </>
   );

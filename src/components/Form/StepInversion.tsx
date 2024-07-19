@@ -246,7 +246,7 @@ export default function StepInversion() {
       </SelectInput>
       <SelectInput
         label="Plazo de inversion"
-        textDefault="seleccione"
+        textDefault="Seleccione"
         name="tiempoInversion"
         className="col-span-12 sm:col-span-6 "
         disabled={values.tipoParticipe === TIPO_PARTICIPE.A}

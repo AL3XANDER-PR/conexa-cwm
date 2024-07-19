@@ -211,7 +211,7 @@ export default function StepDatos() {
       />
       <InputSearch
         name="nroDocumento"
-        label="Numero Documento:"
+        label="Número Documento:"
         className="col-span-12 sm:col-span-9"
         hidden={
           !(
@@ -416,7 +416,7 @@ export default function StepDatos() {
             <TextInput
               name="profesion"
               type="text"
-              label="Profesion u Ocupación:"
+              label="Profesión u Ocupación:"
               className="col-span-12 lg:col-span-8"
             />
             <TextInput
@@ -447,7 +447,7 @@ export default function StepDatos() {
             <TextInput
               name="razonSocial"
               type="text"
-              label="Razon Social"
+              label="Razón Social"
               className="col-span-12"
             />
             <TextInput

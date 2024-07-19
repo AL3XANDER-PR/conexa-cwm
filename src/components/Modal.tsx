@@ -73,7 +73,7 @@ const Modal = () => {
                   <div className="px-5 py-2">
                     <div>
                       <h5 className="text-xl font-semibold tracking-tight text-gray-700 text-center">
-                        Participe Clase A
+                        Partícipe Clase A
                       </h5>
                       <p className="mb-3 text-xs font-normal text-gray-700 text-center">
                         Mayor rendimiento proyectado
@@ -107,7 +107,7 @@ const Modal = () => {
                   <div className="px-5 py-2">
                     <div>
                       <h5 className="text-xl font-semibold tracking-tight text-gray-700 text-center">
-                        Participe Clase B
+                        Partícipe Clase B
                       </h5>
                       <p className="mb-3 text-xs font-normal text-gray-700 text-center">
                         Rendimiento fijo garantizado

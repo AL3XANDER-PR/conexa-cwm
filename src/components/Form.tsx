@@ -1,11 +1,10 @@
-// @ts-nocheck
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StepNavigation } from "./StepNavigation";
 import { ButtonsNavigation } from "./ButtonsNavigation";
 import StepInversion from "./Form/StepInversion";
 import StepDatos from "./Form/StepDatos";
-import { initialValues } from "../interfaces/FormInterface";
-import { FormikProvider, useFormik } from "formik";
+import { FormDataValues, initialValues } from "../interfaces/FormInterface";
+import { FormikProvider, useFormik, useFormikContext } from "formik";
 import { validationSchema } from "../schema/ValidateSchema";
 import { postData } from "../services/apiService";
 import StepDomicilio from "./Form/StepDomicilio";
@@ -20,6 +19,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { sendMessage } from "../services/sendMessageService";
+import { TIPO_PERSONA } from "../constants/constants";
 const MySwal = withReactContent(Swal);
 
 const REGION = import.meta.env.VITE_REGION;
@@ -41,51 +41,6 @@ export default function Form() {
   const [loadingSendForm, setLoadingSendForm] = useState<boolean>(false);
   const [messageLoading, setMessageLoading] = useState<string>("");
 
-  const steps = [
-    {
-      title: true ? "Datos de la Empresa" : "Datos del Partícipe",
-      description: "Datos básicos del partícipe.",
-      description_larga: "Datos Basicos para el Participe: ",
-      component: <StepDatos />,
-    },
-    {
-      title: "Datos para la Inversión",
-      description: "Datos básicos de la Inversión",
-      description_larga: "Datos Basicos para el contrato de Inversión: ",
-      component: <StepInversion />,
-    },
-    {
-      title: "Domicilio y Cuentas Bancaria",
-      description: "Datos de Domicilio",
-      description_larga: "Datos de domicilio y cuentas bancarias.",
-      component: <StepDomicilio />,
-    },
-    {
-      title: "Vinculación",
-      description: "Vinculación con CONEXA",
-      description_larga: "Vinculación con CONEXA ASSET MANAGEMENT S.A",
-      component: <StepVinculacion />,
-    },
-    {
-      title: "Origen de Fondos",
-      description: "Declaración Jurada de Origen de Fondos",
-      description_larga: "Declaración Jurada de Origen de Fondos.",
-      component: <StepOrigenFondos />,
-    },
-    {
-      title: "Persona Políticamente Expuesta",
-      description: "Condición de Persona Políticamente Expuesta",
-      description_larga:
-        "Declaración Jurada Sobre la Condición de Persona Políticamente Expuesta",
-      component: <StepPPE />,
-    },
-    {
-      title: "Subida de documentos",
-      description: "Subir archivos de tu documento de identidad",
-      description_larga: "",
-      component: <StepUploadFiles />,
-    },
-  ];
   const handleStepClick = async (newStep: any) => {
     if (newStep > step) {
       const isValid = await validationSchema[step]
@@ -140,9 +95,29 @@ export default function Form() {
     scrollToTop();
   };
 
-  const handleConfirm = () => {
-    setConfirm(true);
-    scrollToTop();
+  const handleConfirm = async () => {
+    const isValid = await validationSchema[step]
+      .validate(formik.values, { abortEarly: false })
+      .then(() => true)
+      .catch((err) => {
+        const touchedFields: any = {};
+        err.inner.forEach((error: any) => {
+          touchedFields[error.path] = true;
+        });
+        formik.setTouched(touchedFields);
+        formik.setErrors(
+          err.inner.reduce((acc: any, curr: any) => {
+            acc[curr.path] = curr.message;
+            return acc;
+          }, {})
+        );
+        return false;
+      });
+    if (isValid) {
+      setStep(step + 1);
+      setConfirm(true);
+      scrollToTop();
+    }
   };
   const handleConfirmCancel = () => {
     setConfirm(false);
@@ -153,7 +128,6 @@ export default function Form() {
     initialValues,
     validationSchema: validationSchema[step],
     onSubmit: async (values, { setSubmitting }) => {
-
       try {
         // setLoadingSendForm(true);
         const persona = {
@@ -221,9 +195,9 @@ export default function Form() {
           const params = {
             phone: `51${cleanedValues.persona.celular}`,
             message: msj,
-          }
+          };
 
-          await sendMessage({...params})
+          await sendMessage({ ...params });
 
           // setConfirm(false);
           // setStep(0);
@@ -246,6 +220,61 @@ export default function Form() {
       return;
     },
   });
+
+  const isParticipe = (tipoPersona: string) => {
+    if (tipoPersona === TIPO_PERSONA.NATURAL) {
+      return "de la Empresa";
+    }
+    if (tipoPersona === TIPO_PERSONA.JURIDICO) {
+      return "del Participe";
+    }
+  };
+
+  const steps = [
+    {
+      title: `Datos ${isParticipe(formik.values.tipoPersona)}`,
+      description: `Datos básicos ${isParticipe(formik.values.tipoPersona)}`,
+      description_larga: `Datos ${isParticipe(formik.values.tipoPersona)}`,
+      component: <StepDatos />,
+    },
+    {
+      title: "Datos para la Inversión",
+      description: "Datos básicos de la Inversión",
+      description_larga: "Datos Basicos para el contrato de Inversión: ",
+      component: <StepInversion />,
+    },
+    {
+      title: "Domicilio y Cuentas Bancaria",
+      description: "Datos de Domicilio",
+      description_larga: "Datos de domicilio y cuentas bancarias.",
+      component: <StepDomicilio />,
+    },
+    {
+      title: "Vinculación",
+      description: "Vinculación con CONEXA",
+      description_larga: "Vinculación con CONEXA ASSET MANAGEMENT S.A",
+      component: <StepVinculacion />,
+    },
+    {
+      title: "Origen de Fondos",
+      description: "Declaración Jurada de Origen de Fondos",
+      description_larga: "Declaración Jurada de Origen de Fondos.",
+      component: <StepOrigenFondos />,
+    },
+    {
+      title: "Persona Políticamente Expuesta",
+      description: "Condición de Persona Políticamente Expuesta",
+      description_larga:
+        "Declaración Jurada Sobre la Condición de Persona Políticamente Expuesta",
+      component: <StepPPE />,
+    },
+    {
+      title: "Subida de documentos",
+      description: "Subir archivos de tu documento de identidad",
+      description_larga: "",
+      component: <StepUploadFiles />,
+    },
+  ];
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollToTop = () => {

@@ -332,6 +332,11 @@ const validacionesTipoRuc = {
 //         .typeError("Solo Letras y Espacios"),
 //   }),
 // });
+// const step7 = yup.object().shape({
+//   images: yup
+//     .array()
+//     .length(2, "Se debe cargar la cara y el reverso de su documento de identidad")
+// });
 
 const step1 = yup.object({});
 const step2 = yup.object({});
@@ -339,5 +344,14 @@ const step3 = yup.object({});
 const step4 = yup.object({});
 const step5 = yup.object({});
 const step6 = yup.object({});
+const step7 = yup.object({});
 
-export const validationSchema = [step1, step2, step3, step4, step5, step6];
+export const validationSchema = [
+  step1,
+  step2,
+  step3,
+  step4,
+  step5,
+  step6,
+  step7,
+];
